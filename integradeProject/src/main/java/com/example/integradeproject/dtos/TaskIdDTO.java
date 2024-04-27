@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Getter
 @Setter
@@ -14,9 +15,7 @@ public class TaskIdDTO {
     private String description ;
     private String assignees ;
     private String status ;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss z " , timezone = "Asia/Bangkok")
-    private LocalDateTime createdOn ;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss z " , timezone = "Asia/Bangkok")
-    private LocalDateTime updatedOn ;
+    private ZonedDateTime createdOn ;
+    private ZonedDateTime updatedOn ;
 
 }
