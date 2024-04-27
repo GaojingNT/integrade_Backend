@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -22,8 +23,8 @@ public class Task {
     private String assignees ;
     private String status ;
 
-    private ZonedDateTime createdOn ;
-    private ZonedDateTime updatedOn ;
+    private Date createdOn ;
+    private Date updatedOn ;
 
 
 
