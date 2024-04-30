@@ -1,4 +1,5 @@
 package com.example.integradeproject.controllers;
+import com.example.integradeproject.dtos.NewTaskDTO;
 import com.example.integradeproject.dtos.TaskIdDTO;
 import com.example.integradeproject.entities.Task;
 import com.example.integradeproject.services.ListMapper;
@@ -39,6 +40,18 @@ public class TaskController {
         Task task = service.findById(id);
         TaskIdDTO  taskIdDTO = modelMapper.map(task ,TaskIdDTO.class);
         return ResponseEntity.ok(taskIdDTO);
+    }
+    @PostMapping("")
+    public ResponseEntity<NewTaskDTO> createTask(@RequestBody NewTaskDTO newTask) {
+        // เรียกใช้ service เพื่อสร้างงานใหม่
+        NewTaskDTO createdTask = service.createTask(newTask);
+
+        // ส่งกลับ ResponseEntity ที่มีสถานะ 201 Created พร้อมงานที่ถูกสร้าง
+        return ResponseEntity.status(201).body(createdTask);
+    }
+    @DeleteMapping("/{id}")
+    public  void  removeTask (@PathVariable Integer id ){
+        service.deleteById(id);
     }
 
 
