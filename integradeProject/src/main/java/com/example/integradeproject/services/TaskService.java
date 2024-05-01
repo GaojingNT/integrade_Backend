@@ -1,6 +1,7 @@
 package com.example.integradeproject.services;
 
 import com.example.integradeproject.dtos.NewTaskDTO;
+import com.example.integradeproject.dtos.TaskDTO;
 import com.example.integradeproject.entities.Task;
 import com.example.integradeproject.repositories.TaskRepository;
 import jakarta.transaction.Transactional;
@@ -37,10 +38,27 @@ public class TaskService {
         Task savedTask = repository.saveAndFlush(task);
         return mapper.map(savedTask, NewTaskDTO.class);
     }
-     public void  deleteById(Integer id){
-        Task task  = repository.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND , "ID " + id + " DOES NOT EXIST !!!"));
-         repository.delete(task);
-     }
 
+    public NewTaskDTO deleteById( Integer id) {
+        Task task = repository.findById(id)
+                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "ID " + id + " DOES NOT EXIST !!!"));
+        repository.deleteById(task.getTaskId());
+        NewTaskDTO deletedTaskDTO = mapper.map(task, NewTaskDTO.class);
+
+        return deletedTaskDTO;
+    }
+
+    public NewTaskDTO updateTask(NewTaskDTO newTaskDTO, Integer id) {
+        Task existingTask = repository.findById(id)
+                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "ID " + id + " DOES NOT EXIST !!!"));
+
+        Integer originalId = existingTask.getTaskId();
+        mapper.map(newTaskDTO, existingTask);
+        existingTask.setTaskId(originalId);
+        Task updatedTask = repository.saveAndFlush(existingTask);
+        NewTaskDTO updatedTaskDTO = mapper.map(updatedTask, NewTaskDTO.class);
+
+        return updatedTaskDTO;
+    }
 
 }

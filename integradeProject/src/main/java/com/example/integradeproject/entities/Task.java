@@ -1,10 +1,13 @@
 package com.example.integradeproject.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -25,10 +28,8 @@ public class Task {
     private String description ;
     private String assignees ;
     private String status ;
-
     @Column(name = "createdOn", updatable = false, insertable = false)
     private Date createdOn;
-
     @Column(name = "updatedOn", updatable = false, insertable = false)
     private Date updatedOn;
 

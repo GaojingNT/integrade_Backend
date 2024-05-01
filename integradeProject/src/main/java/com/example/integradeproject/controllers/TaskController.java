@@ -7,8 +7,10 @@ import com.example.integradeproject.dtos.TaskDTO;
 import com.example.integradeproject.services.TaskService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -43,15 +45,24 @@ public class TaskController {
     }
     @PostMapping("")
     public ResponseEntity<NewTaskDTO> createTask(@RequestBody NewTaskDTO newTask) {
-        // เรียกใช้ service เพื่อสร้างงานใหม่
         NewTaskDTO createdTask = service.createTask(newTask);
 
-        // ส่งกลับ ResponseEntity ที่มีสถานะ 201 Created พร้อมงานที่ถูกสร้าง
-        return ResponseEntity.status(201).body(createdTask);
+        return new ResponseEntity<>(createdTask , HttpStatus.CREATED);
     }
     @DeleteMapping("/{id}")
-    public  void  removeTask (@PathVariable Integer id ){
-        service.deleteById(id);
+    public ResponseEntity<NewTaskDTO> removeTask (@PathVariable Integer id ){
+        NewTaskDTO newTaskDTO = service.deleteById(id);
+        return  ResponseEntity.ok(newTaskDTO);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<NewTaskDTO> updateTask(@RequestBody NewTaskDTO newTaskDTO, @PathVariable Integer id) {
+        try {
+            NewTaskDTO updatedTaskDTO = service.updateTask(newTaskDTO, id);
+
+            return ResponseEntity.ok(updatedTaskDTO);
+        } catch (HttpClientErrorException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(null);
+        }
     }
 
 
