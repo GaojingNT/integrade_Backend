@@ -27,7 +27,7 @@ public class TaskController {
     @Autowired
     private ListMapper listMapper;
 
-//    @GetMapping("")
+    //    @GetMapping("")
 //    public List<Task> getAllTasks(){
 //        return service.getTask();
 //    }

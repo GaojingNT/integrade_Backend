@@ -28,6 +28,7 @@ public class Task {
     private String description ;
     private String assignees ;
     private String status ;
+
     @Column(name = "createdOn", updatable = false, insertable = false)
     private Date createdOn;
     @Column(name = "updatedOn", updatable = false, insertable = false)

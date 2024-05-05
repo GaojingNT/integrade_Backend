@@ -32,13 +32,17 @@ public class TaskService {
                 "task " + id + " does not exist !! "));
     }
 
+    @Transactional
     public NewTaskDTO createTask(NewTaskDTO newTask) {
-
+        if(newTask.getTitle() == null || newTask.getTitle().isEmpty()){
+            throw new IllegalArgumentException("Title is required");
+        }
         Task task = mapper.map(newTask, Task.class);
         Task savedTask = repository.saveAndFlush(task);
         return mapper.map(savedTask, NewTaskDTO.class);
     }
 
+    @Transactional
     public NewTaskDTO deleteById( Integer id) {
         Task task = repository.findById(id)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "ID " + id + " DOES NOT EXIST !!!"));
@@ -48,7 +52,11 @@ public class TaskService {
         return deletedTaskDTO;
     }
 
+    @Transactional
     public NewTaskDTO updateTask(NewTaskDTO newTaskDTO, Integer id) {
+        if (newTaskDTO == null || newTaskDTO.getTitle() == null || newTaskDTO.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("Title is required");
+        }
         Task existingTask = repository.findById(id)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "ID " + id + " DOES NOT EXIST !!!"));
 
