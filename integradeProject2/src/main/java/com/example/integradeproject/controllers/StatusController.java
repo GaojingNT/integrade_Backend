@@ -13,6 +13,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
+
 @RequestMapping("/v2/statuses")
 public class StatusController {
     @Autowired
