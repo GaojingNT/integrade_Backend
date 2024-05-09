@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface Task2Repository extends JpaRepository<Task2 , Integer> {
-    List<Task2> findByStatusId(Status status);
+    List<Task2> findByStatusId(Status string);
 }

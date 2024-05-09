@@ -1,14 +1,13 @@
 package com.example.integradeproject.controllers;
 
-import com.example.integradeproject.dtos.Task2DTO;
-import com.example.integradeproject.dtos.Task2IdDTO;
-import com.example.integradeproject.dtos.TaskIdDTO;
+import com.example.integradeproject.dtos.*;
 import com.example.integradeproject.entities.Task;
 import com.example.integradeproject.entities.Task2;
 import com.example.integradeproject.services.ListMapper;
 import com.example.integradeproject.services.Task2Service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,4 +35,29 @@ public class Task2Controller {
         Task2IdDTO task2IdDTO = modelMapper.map(task2 ,Task2IdDTO.class);
         return ResponseEntity.ok(task2IdDTO);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<NewTask2DTO> removeTask (@PathVariable Integer id ){
+        NewTask2DTO newTask2DTO = service.deleteById(id);
+        return  ResponseEntity.ok(newTask2DTO);
+    }
+//    @PostMapping("")
+//    public ResponseEntity<NewTask2DTO> createTask(@RequestBody NewTask2DTO newTask2DTO) {
+//        NewTask2DTO createdTask = service.createTask(newTask2DTO);
+//
+//        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+//    }
+@PostMapping("")
+public ResponseEntity<NewTask2DTO> createTask(@RequestBody NewTask2DTO newTask2DTO) {
+    NewTask2DTO createdTaskDTO = service.createTask(newTask2DTO);
+    return new ResponseEntity<>(createdTaskDTO, HttpStatus.CREATED);
 }
+    @PutMapping("/{id}")
+    public ResponseEntity<NewTask2DTO> updateTask(@PathVariable Integer id, @RequestBody NewTask2DTO newTask2DTO) {
+        NewTask2DTO updatedTaskDTO = service.updateTask(id, newTask2DTO);
+        return new ResponseEntity<>(updatedTaskDTO, HttpStatus.OK);
+    }
+}
+
+
+
+
