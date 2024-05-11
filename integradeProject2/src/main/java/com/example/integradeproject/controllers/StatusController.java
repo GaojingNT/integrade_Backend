@@ -30,9 +30,8 @@ public class StatusController {
     }
     @PostMapping("")
     public ResponseEntity<Status> createStatus(@RequestBody Status status) {
-        Status newStatus =  service.createNewStatus(status);
-        return new ResponseEntity<>(newStatus , HttpStatus.CREATED);
-
+        Status newStatus = service.createNewStatus(status);
+        return new ResponseEntity<>(newStatus, HttpStatus.OK);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Status> removeStatus (@PathVariable Integer id ){

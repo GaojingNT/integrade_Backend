@@ -49,7 +49,7 @@ public class Task2Controller {
 @PostMapping("")
 public ResponseEntity<NewTask2DTO> createTask(@RequestBody NewTask2DTO newTask2DTO) {
     NewTask2DTO createdTaskDTO = service.createTask(newTask2DTO);
-    return new ResponseEntity<>(createdTaskDTO, HttpStatus.CREATED);
+    return new ResponseEntity<>(createdTaskDTO, HttpStatus.OK);
 }
     @PutMapping("/{id}")
     public ResponseEntity<NewTask2DTO> updateTask(@PathVariable Integer id, @RequestBody NewTask2DTO newTask2DTO) {
