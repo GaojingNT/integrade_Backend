@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 @Service
@@ -37,13 +38,6 @@ public class StatusService {
         return statusRepository.saveAndFlush(status);
     }
 
-    public Status deleteById(Integer statusId) {
-        Status status = statusRepository.findById(statusId)
-                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "ID " + statusId + " DOES NOT EXIST !!!"));
-        statusRepository.deleteById(status.getStatusId());
-        return status;
-
-    }
 
 
     public Status updateByStatusId(Status status, Integer statusId) {
@@ -60,11 +54,20 @@ public class StatusService {
         return statusRepository.saveAndFlush(existingStatus);
     }
     @Transactional
+    public Status deleteById(Integer statusId) {
+        Status status = statusRepository.findById(statusId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Status with ID " + statusId + " does not exist"));
+
+        statusRepository.delete(status);
+        return status;
+    }
+    @Transactional
     public void deleteStatusAndTransferTasks(int id, int newStatusId) {
         Status currentStatus = statusRepository.findById(id)
-                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "Status with id " + id + " does not exist"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Status with ID " + id + " does not exist"));
+
         Status newStatus = statusRepository.findById(newStatusId)
-                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND ,"Status with id " + newStatusId + " does not exist"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Status with ID " + newStatusId + " does not exist"));
 
         List<Task2> tasksWithCurrentStatus = task2Repository.findByStatusId(currentStatus);
         tasksWithCurrentStatus.forEach(task -> task.setStatusId(newStatus));

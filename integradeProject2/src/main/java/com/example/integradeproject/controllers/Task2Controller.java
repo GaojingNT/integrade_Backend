@@ -17,6 +17,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/v2/tasks")
 
+
 public class Task2Controller {
     @Autowired
     private Task2Service service;
@@ -24,6 +25,7 @@ public class Task2Controller {
     private ModelMapper modelMapper;
     @Autowired
     private ListMapper listMapper;
+
     @GetMapping("")
     public ResponseEntity<List<Task2DTO>> getAllTasks() {
         List<Task2DTO> tasks = service.getTask();

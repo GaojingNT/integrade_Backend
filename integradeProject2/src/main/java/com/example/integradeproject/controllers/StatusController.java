@@ -33,11 +33,7 @@ public class StatusController {
         Status newStatus = service.createNewStatus(status);
         return new ResponseEntity<>(newStatus, HttpStatus.OK);
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Status> removeStatus (@PathVariable Integer id ){
-        Status status = service.deleteById(id);
-        return  ResponseEntity.ok(status);
-    }
+
     @PutMapping("/{id}")
     public  ResponseEntity<Status> UpdateStatus (@RequestBody Status status , @PathVariable Integer id ){
         try{
@@ -48,11 +44,18 @@ public class StatusController {
             return ResponseEntity.status(e.getStatusCode()).body(null);
         }
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> removeStatus(@PathVariable Integer id) {
+        service.deleteById(id);
+        return ResponseEntity.ok("{}");
+    }
+
     @DeleteMapping("/{id}/{newId}")
     public ResponseEntity<Object> deleteStatusAndTransferTasks(@PathVariable int id, @PathVariable int newId) {
         service.deleteStatusAndTransferTasks(id, newId);
         return ResponseEntity.ok("{}");
     }
+
 
 }
 
