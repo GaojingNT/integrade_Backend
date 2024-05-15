@@ -37,7 +37,7 @@ public class Task2Service {
         return tasks.stream()
                 .map(task -> {
                     Task2DTO task2DTO = mapper.map(task, Task2DTO.class);
-                    task2DTO.setStatusName(task.getStatusId().getStatusName());
+                    task2DTO.setName(task.getStatus().getName());
                     return task2DTO;
                 })
                 .collect(Collectors.toList());
@@ -50,26 +50,37 @@ public class Task2Service {
     public NewTask2DTO deleteById(Integer id) {
         Task2 task2 = repository.findById(id)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "ID " + id + " DOES NOT EXIST !!!"));
-        repository.deleteById(task2.getTaskId());
+        repository.deleteById(task2.getId());
         NewTask2DTO deletedTask2DTO = mapper.map(task2, NewTask2DTO.class);
 
         return deletedTask2DTO;
     }
 
     public NewTask2DTO createTask(NewTask2DTO newTask2DTO) {
+
         Task2 task = new Task2();
         task.setTitle(newTask2DTO.getTitle());
         task.setDescription(newTask2DTO.getDescription());
+        if (newTask2DTO.getStatus() != null) {
+            try {
+                int statusId = Integer.parseInt(newTask2DTO.getStatus());
+                Status status = statusRepository.findById(statusId)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Status Id " + statusId + " DOES NOT EXIST !!!"));
+                task.setStatus(status);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid status ID format");
+            }
+        }
         task.setAssignees(newTask2DTO.getAssignees());
 
         // Find the Status entity by name
-        Optional<Status> status = statusRepository.findByStatusName(newTask2DTO.getStatusName());
-        status.ifPresent(task::setStatusId);
+        Optional<Status> status = statusRepository.findById(Integer.valueOf(String.valueOf(newTask2DTO.getStatus())));
+        status.ifPresent(task::setStatus);
 
         Task2 savedTask = repository.save(task);
 
         NewTask2DTO createdTaskDTO = mapper.map(savedTask, NewTask2DTO.class);
-        createdTaskDTO.setStatusName(savedTask.getStatusId().getStatusName()); // Set the status name
+        createdTaskDTO.setStatus(savedTask.getStatus().getName()); // Set the status name
         return createdTaskDTO;
     }
 
@@ -82,13 +93,13 @@ public class Task2Service {
         existingTask.setAssignees(newTask2DTO.getAssignees());
 
         // Find the Status entity by name
-        Optional<Status> status = statusRepository.findByStatusName(newTask2DTO.getStatusName());
-        status.ifPresent(existingTask::setStatusId);
+        Optional<Status> status = statusRepository.findByName(newTask2DTO.getStatus());
+        status.ifPresent(existingTask::setStatus);
 
         Task2 updatedTask = repository.save(existingTask);
 
         NewTask2DTO updatedTaskDTO = mapper.map(updatedTask, NewTask2DTO.class);
-        updatedTaskDTO.setStatusName(updatedTask.getStatusId().getStatusName()); // Set the status name
+        updatedTaskDTO.setStatus(updatedTask.getStatus().getName()); // Set the status name
         return updatedTaskDTO;
     }
 }

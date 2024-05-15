@@ -10,7 +10,7 @@ public class Task2IdDTO {
         private String title;
         private String description;
         private String assignees;
-        private String statusName;
+        private String stautus ;
         private Timestamp createdOn;
         private Timestamp updatedOn;
 }

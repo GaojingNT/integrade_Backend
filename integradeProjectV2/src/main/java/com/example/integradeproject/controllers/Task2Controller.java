@@ -32,10 +32,9 @@ public class Task2Controller {
         return ResponseEntity.ok(tasks);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getTaskById(@PathVariable Integer id){
+    public ResponseEntity<Task2> getTaskById(@PathVariable Integer id){
         Task2 task2 = service.findById(id);
-        Task2IdDTO task2IdDTO = modelMapper.map(task2 ,Task2IdDTO.class);
-        return ResponseEntity.ok(task2IdDTO);
+        return ResponseEntity.ok(task2);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<NewTask2DTO> removeTask (@PathVariable Integer id ){
@@ -51,12 +50,12 @@ public class Task2Controller {
 @PostMapping("")
 public ResponseEntity<NewTask2DTO> createTask(@RequestBody NewTask2DTO newTask2DTO) {
     NewTask2DTO createdTaskDTO = service.createTask(newTask2DTO);
-    return new ResponseEntity<>(createdTaskDTO, HttpStatus.OK);
+    return new ResponseEntity<>(createdTaskDTO, HttpStatus.CREATED);
 }
     @PutMapping("/{id}")
     public ResponseEntity<NewTask2DTO> updateTask(@PathVariable Integer id, @RequestBody NewTask2DTO newTask2DTO) {
         NewTask2DTO updatedTaskDTO = service.updateTask(id, newTask2DTO);
-        return new ResponseEntity<>(updatedTaskDTO, HttpStatus.OK);
+        return new ResponseEntity<>(updatedTaskDTO, HttpStatus.CREATED);
     }
 }
 

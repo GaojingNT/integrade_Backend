@@ -1,6 +1,9 @@
 package com.example.integradeproject.controllers;
 
+import com.example.integradeproject.dtos.Task2DTO;
+import com.example.integradeproject.dtos.Task2IdDTO;
 import com.example.integradeproject.entities.Status;
+import com.example.integradeproject.entities.Task2;
 import com.example.integradeproject.services.ListMapper;
 import com.example.integradeproject.services.StatusService;
 import org.modelmapper.ModelMapper;
@@ -28,16 +31,25 @@ public class StatusController {
     public List<Status> getALLStatus(){
         return service.findAllStatus();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Status> getStatusById(@PathVariable Integer id) {
+        Status status = service.findById(id);
+        return ResponseEntity.ok(status);
+    }
+
+
     @PostMapping("")
     public ResponseEntity<Status> createStatus(@RequestBody Status status) {
         Status newStatus = service.createNewStatus(status);
-        return new ResponseEntity<>(newStatus, HttpStatus.OK);
+        return new ResponseEntity<>(newStatus, HttpStatus.CREATED);
     }
+
 
     @PutMapping("/{id}")
     public  ResponseEntity<Status> UpdateStatus (@RequestBody Status status , @PathVariable Integer id ){
         try{
-            Status updateStatus  =service.updateByStatusId(status , id);
+            Status updateStatus  =service.updateStatus(id, status);
             return  ResponseEntity.ok(updateStatus);
 
         }catch (HttpClientErrorException e) {
