@@ -13,18 +13,15 @@ import lombok.*;
 public class Status {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "statusId")
-    private Integer id ;
-    @Column(name = "statusName")
-    private String name;
-    @Column(name = "statusDescription")
-    private String description;
+    private Integer statusId ;
+    private String statusName;
+    private String statusDescription;
     public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+        this.statusName = name == null ? null : name.trim();
     }
 
     public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
+        this.statusDescription = description == null ? null : description.trim();
     }
 
 

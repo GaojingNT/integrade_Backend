@@ -17,8 +17,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
-
 @Service
 public class StatusService {
     @Autowired
@@ -36,39 +34,24 @@ public class StatusService {
         return statusRepository.findAll();
     }
 
-    @Transactional
-    public Status findById(Integer id){
-        return statusRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"task " + id + " does not exist !! "));
-    }
-
     public Status createNewStatus(Status status) {
-
-        boolean exists = statusRepository.existsByName(status.getName());
-        if (exists) {
-            throw new IllegalArgumentException("A Status with the name '" + status.getName() + "' already exists.");
-        }
-
         return statusRepository.saveAndFlush(status);
     }
 
 
 
+    public Status updateByStatusId(Status status, Integer statusId) {
+        Status existingStatus = statusRepository.findById(statusId)
+                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "ID " + status + " DOES NOT EXIST !!!"));
 
-
-
-    public Status updateStatus(Integer id, Status updatedStatus) {
-        if (id == 1 || updatedStatus.getName() == null || updatedStatus.getName().trim().isEmpty()) {
-            throw new IllegalStateException("Cannot edit this status");
+        if (status == null || status.getStatusName() == null || status.getStatusName().isEmpty()) {
+            throw new IllegalArgumentException("name is required");
         }
-        Optional<Status> optionalStatus = statusRepository.findById(id);
-        if (optionalStatus.isPresent()) {
-            Status existingStatus = optionalStatus.get();
-            existingStatus.setName(updatedStatus.getName());
-            existingStatus.setDescription(updatedStatus.getDescription());
-            return statusRepository.save(existingStatus);
-        } else {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Status not found with id: " + id);
-        }
+        Integer originalId = existingStatus.getStatusId();
+        mapper.map(status, existingStatus);
+        existingStatus.setStatusId(originalId);
+
+        return statusRepository.saveAndFlush(existingStatus);
     }
     @Transactional
     public Status deleteById(Integer statusId) {
@@ -85,8 +68,8 @@ public class StatusService {
         Status newStatus = statusRepository.findById(newStatusId)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "Status with ID " + newStatusId + " does not exist"));
 
-        List<Task2> tasksWithCurrentStatus = task2Repository.findByStatus(currentStatus);
-        tasksWithCurrentStatus.forEach(task -> task.setStatus(newStatus));
+        List<Task2> tasksWithCurrentStatus = task2Repository.findByStatusId(currentStatus);
+        tasksWithCurrentStatus.forEach(task -> task.setStatusId(newStatus));
         task2Repository.saveAll(tasksWithCurrentStatus);
 
         statusRepository.delete(currentStatus);

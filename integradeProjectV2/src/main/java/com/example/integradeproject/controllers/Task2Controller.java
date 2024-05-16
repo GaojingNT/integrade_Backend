@@ -27,14 +27,18 @@ public class Task2Controller {
     private ListMapper listMapper;
 
     @GetMapping("")
-    public ResponseEntity<List<Task2DTO>> getAllTasks() {
-        List<Task2DTO> tasks = service.getTask();
+    public ResponseEntity<List<Task2DTO>> getAllTasks(
+            @RequestParam(required = false) String filterStatus,
+            @RequestParam(required = false) String statusName
+    ) {
+        List<Task2DTO> tasks = service.getTask(filterStatus, statusName);
         return ResponseEntity.ok(tasks);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Task2> getTaskById(@PathVariable Integer id){
+    public ResponseEntity<Object> getTaskById(@PathVariable Integer id){
         Task2 task2 = service.findById(id);
-        return ResponseEntity.ok(task2);
+        Task2IdDTO task2IdDTO = modelMapper.map(task2 ,Task2IdDTO.class);
+        return ResponseEntity.ok(task2IdDTO);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<NewTask2DTO> removeTask (@PathVariable Integer id ){
@@ -50,12 +54,12 @@ public class Task2Controller {
 @PostMapping("")
 public ResponseEntity<NewTask2DTO> createTask(@RequestBody NewTask2DTO newTask2DTO) {
     NewTask2DTO createdTaskDTO = service.createTask(newTask2DTO);
-    return new ResponseEntity<>(createdTaskDTO, HttpStatus.CREATED);
+    return new ResponseEntity<>(createdTaskDTO, HttpStatus.OK);
 }
     @PutMapping("/{id}")
     public ResponseEntity<NewTask2DTO> updateTask(@PathVariable Integer id, @RequestBody NewTask2DTO newTask2DTO) {
         NewTask2DTO updatedTaskDTO = service.updateTask(id, newTask2DTO);
-        return new ResponseEntity<>(updatedTaskDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(updatedTaskDTO, HttpStatus.OK);
     }
 }
 

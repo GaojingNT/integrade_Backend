@@ -8,28 +8,23 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewTask2DTO {
-    private Integer id ;
+    private Integer taskId ;
     private String title ;
     private String description ;
     private String assignees ;
-    private String  status ;
+    private String  statusName ;
 
 public void setTitle(String title){
     this.title = title;
 }
-    public void setDescription(String description) {
-        description = description == "" ? null : description;
+    public void setDescription(String description){
         this.description = description;
     }
-
-    public void setAssignees(String assignees) {
-        assignees = assignees == "" ? null : assignees;
+    public void setAssignees(String assignees){
         this.assignees = assignees;
     }
-
-
-    public void setStatus(String status){
-        this.status = status;
+    public void setStatusName(String statusName){
+        this.statusName = statusName;
     }
 
 
