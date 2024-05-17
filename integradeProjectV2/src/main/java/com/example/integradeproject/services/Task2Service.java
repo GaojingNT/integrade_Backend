@@ -96,9 +96,9 @@ public class Task2Service {
         Task2 existingTask = repository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskId));
 
-        existingTask.setTitle(newTask2DTO.getTitle());
-        existingTask.setDescription(newTask2DTO.getDescription());
-        existingTask.setAssignees(newTask2DTO.getAssignees());
+        existingTask.setTitle(newTask2DTO.getTitle().trim());
+        existingTask.setDescription(newTask2DTO.getDescription().trim());
+        existingTask.setAssignees(newTask2DTO.getAssignees().trim());
 
         // Find the Status entity by name
         Optional<Status> status = statusRepository.findByStatusName(newTask2DTO.getStatusName());
